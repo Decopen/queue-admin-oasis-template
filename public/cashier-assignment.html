@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Assignment - Queue Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 2px 10px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        .main-content {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .cashier-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        .cashier-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .status-active {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        .status-inactive {
+            background: #6c757d;
+            color: white;
+        }
+        .status-busy {
+            background: linear-gradient(45deg, #ffc107, #fd7e14);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="p-3">
+                    <h4 class="text-white fw-bold mb-4">
+                        <i class="fas fa-users-cog me-2"></i>Queue Manager
+                    </h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer-registration.html">
+                                <i class="fas fa-user-plus me-2"></i>Customer Registration
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer-list.html">
+                                <i class="fas fa-users me-2"></i>Customer List
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="user-registration.html">
+                                <i class="fas fa-user-cog me-2"></i>User Registration
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="cashier-assignment.html">
+                                <i class="fas fa-cash-register me-2"></i>Cashier Assignment
+                            </a>
+                        </li>
+                        <li class="nav-item mt-4">
+                            <a class="nav-link" href="login.html">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Top Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-custom">
+                    <div class="container-fluid">
+                        <h5 class="mb-0 fw-bold">Cashier Assignment</h5>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Welcome, Admin</span>
+                            <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Profile">
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Cashier Assignment Content -->
+                <div class="p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-primary">Cashier Management & Assignment</h4>
+                            <p class="text-muted">Monitor cashier status and assign customers to available cashiers</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-success me-2">
+                                <i class="fas fa-plus me-2"></i>Add Shift
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-sync me-2"></i>Refresh Status
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Status Overview -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card cashier-card border-0 p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-muted mb-1">Active Cashiers</h6>
+                                        <h3 class="mb-0 fw-bold text-success">8</h3>
+                                    </div>
+                                    <div class="text-success">
+                                        <i class="fas fa-user-check fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card cashier-card border-0 p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-muted mb-1">Busy Cashiers</h6>
+                                        <h3 class="mb-0 fw-bold text-warning">5</h3>
+                                    </div>
+                                    <div class="text-warning">
+                                        <i class="fas fa-user-clock fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card cashier-card border-0 p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-muted mb-1">Available</h6>
+                                        <h3 class="mb-0 fw-bold text-info">3</h3>
+                                    </div>
+                                    <div class="text-info">
+                                        <i class="fas fa-user-circle fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card cashier-card border-0 p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-muted mb-1">Break Time</h6>
+                                        <h3 class="mb-0 fw-bold text-secondary">2</h3>
+                                    </div>
+                                    <div class="text-secondary">
+                                        <i class="fas fa-coffee fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cashier Grid -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card cashier-card border-0">
+                                <div class="card-header bg-white border-0 p-4">
+                                    <h5 class="mb-0 fw-bold">Cashier Stations</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row g-3">
+                                        <!-- Cashier 1 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-active border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 01</h6>
+                                                    <p class="mb-2">Sarah Johnson</p>
+                                                    <small>Serving: John Doe (Q001)</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Cashier 2 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-busy border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 02</h6>
+                                                    <p class="mb-2">Mark Wilson</p>
+                                                    <small>Serving: Jane Smith (Q002)</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cashier 3 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-active border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 03</h6>
+                                                    <p class="mb-2">Emily Davis</p>
+                                                    <small>Available</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cashier 4 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-busy border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 04</h6>
+                                                    <p class="mb-2">David Brown</p>
+                                                    <small>Serving: Mike Johnson (Q003)</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cashier 5 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-inactive border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 05</h6>
+                                                    <p class="mb-2">Lisa Anderson</p>
+                                                    <small>On Break</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cashier 6 -->
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="card status-active border-0 p-3">
+                                                <div class="text-center">
+                                                    <i class="fas fa-cash-register fa-2x mb-2"></i>
+                                                    <h6 class="fw-bold mb-1">Counter 06</h6>
+                                                    <p class="mb-2">Tom Garcia</p>
+                                                    <small>Available</small>
+                                                    <div class="mt-2">
+                                                        <button class="btn btn-light btn-sm me-1">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assignment Panel -->
+                        <div class="col-md-4">
+                            <div class="card cashier-card border-0">
+                                <div class="card-header bg-white border-0 p-4">
+                                    <h5 class="mb-0 fw-bold text-success">Quick Assignment</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="selectCustomer" class="form-label fw-semibold">Select Customer</label>
+                                            <select class="form-select" id="selectCustomer">
+                                                <option value="">Choose Customer</option>
+                                                <option value="q004">Q004 - Emily Brown</option>
+                                                <option value="q005">Q005 - David Lee</option>
+                                                <option value="q006">Q006 - Anna Wilson</option>
+                                                <option value="q007">Q007 - Robert Taylor</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="selectCashier" class="form-label fw-semibold">Assign to Cashier</label>
+                                            <select class="form-select" id="selectCashier">
+                                                <option value="">Choose Available Cashier</option>
+                                                <option value="counter03">Counter 03 - Emily Davis</option>
+                                                <option value="counter06">Counter 06 - Tom Garcia</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="priority" class="form-label fw-semibold">Priority</label>
+                                            <select class="form-select" id="priority">
+                                                <option value="normal">Normal</option>
+                                                <option value="high">High</option>
+                                                <option value="urgent">Urgent</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100 mb-3">
+                                            <i class="fas fa-arrow-right me-2"></i>Assign Customer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="card cashier-card border-0 mt-3">
+                                <div class="card-header bg-white border-0 p-4">
+                                    <h5 class="mb-0 fw-bold text-info">Waiting Queue</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item border-0 px-0">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="mb-1">Q004 - Emily Brown</h6>
+                                                    <small class="text-muted">Money Transfer</small>
+                                                </div>
+                                                <span class="badge bg-warning">High</span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item border-0 px-0">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="mb-1">Q005 - David Lee</h6>
+                                                    <small class="text-muted">Account Opening</small>
+                                                </div>
+                                                <span class="badge bg-success">Normal</span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item border-0 px-0">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="mb-1">Q006 - Anna Wilson</h6>
+                                                    <small class="text-muted">Balance Inquiry</small>
+                                                </div>
+                                                <span class="badge bg-success">Normal</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
